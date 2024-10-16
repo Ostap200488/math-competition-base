@@ -6,26 +6,56 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true })); // For parsing form data
 app.use(express.static('public')); // To serve static files (e.g., CSS)
 
+// In-memory data for streaks and leaderboard
+let streak = 0;
 
-//Some routes required for full functionality are missing here. Only get routes should be required
+// Home Page
 app.get('/', (req, res) => {
-    res.render('index');
+    res.render('index', { streak });
 });
 
-app.get('/quiz', (req, res) => {
-    res.render('quiz');
-});
+// Quiz Page
+app.get('/quiz', (_req, res) => {
+        const question = generateRandomMathQuestion();
+        res.render('quiz', { question });
+    });
 
-//Handles quiz submissions.
+// Handles quiz submissions
 app.post('/quiz', (req, res) => {
-    const { answer } = req.body;
-    console.log(`Answer: ${answer}`);
-
-    //answer will contain the value the user entered on the quiz page
-    //Logic must be added here to check if the answer is correct, then track the streak and redirect properly
-    //By default we'll just redirect to the homepage again.
-    res.redirect('/');
+    const { answer, correctAnswer } = req.body;
+    if (parseInt(answer) === parseInt(correctAnswer)) {
+        streak++; // Correct answer, increment streak
+    } else {
+        // Wrong answer, reset streak and add to leaderboard if streak > 0
+        if (streak > 0) {
+            [].push({ streak, date: new Date().toLocaleString() });
+        }
+        streak = 0; // Reset streak after wrong answer
+    }
+    res.redirect('/completion');
 });
+
+// Quiz Completion Page
+app.get('/completion', (req, res) => {
+    res.render('completion', { streak });
+});
+
+// Leaderboard Page
+app.get('/leaderboard', (req, res) => {
+    // Sort leaderboard by streak in descending order and limit to top 10
+    const topStreaks = [].sort((a, b) => b.streak - a.streak).slice(0, 10);
+    res.render('leaderboard', { topStreaks });
+});
+
+// Utility function to generate a random math question (addition)
+function generateRandomMathQuestion() {
+    const num1 = Math.floor(Math.random() * 10);
+    const num2 = Math.floor(Math.random() * 10);
+    return {
+        questionText: `${num1} + ${num2}`,
+        correctAnswer: num1 + num2
+    };
+}
 
 // Start the server
 app.listen(port, () => {

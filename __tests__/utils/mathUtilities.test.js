@@ -1,9 +1,7 @@
-const { isCorrectAnswer, getQuestion } = require("../../utils/mathUtilities");
+const { add } = require('../../utils/mathUtilities'); // Import the function to be tested
 
-describe("Tests for getQuestion", () => {
-
-});
-
-describe("Tests for isCorrectAnswer", () => {
-    
+describe('Math Utilities', () => {
+  test('should add two numbers correctly', () => {
+    expect(add(1, 2)).toBe(3);
+  });
 });

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaderboard</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Leaderboard</h1>
+        <table>
+            <tr>
+                <th>Rank</th>
+                <th>Streak</th>
+                <th>Date</th>
+            </tr>
+            <% topStreaks.forEach((entry, index) => { %>
+                <tr>
+                    <td><%= index + 1 %></td>
+                    <td><%= entry.streak %></td>
+                    <td><%= entry.date %></td>
+                </tr>
+            <% }) %>
+        </table>
+        <a href="/">Return to homepage</a>
+    </div>
+</body>
+</html>
