@@ -186,7 +186,6 @@ footer p {
     padding: 10px;
   }
 }
-.leaderboard th, .leaderboard td {
+.leaderboard th, .leaderboard td { /* here is the code because i want to check one feature 
   padding: 10px;
-}
 }
